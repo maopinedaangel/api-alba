@@ -5,7 +5,7 @@ api = FastAPI()
 
 
 origins = [
-    "http://localhost:8080", "https://r-store.herokuapp.com"
+    "http://localhost:8080", "https://r-store.herokuapp.com", "https://albastore.netlify.app"
 ]
 
 api.add_middleware(
