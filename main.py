@@ -12,7 +12,7 @@ api.include_router(router_person)
 api.include_router(router_representative)
 
 origins = [
-    "http://localhost:8080", "https://r-store.herokuapp.com", "https://albastore.netlify.app"
+    "http://localhost:8080", "https://auriga-web.netlify.app"
 ]
 
 api.add_middleware(
