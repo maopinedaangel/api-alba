@@ -4,12 +4,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from routers.patient_routers import router as router_patient
 from routers.person_routers import router as router_person
 from routers.representative_routers import router as router_representative
+from routers.user_routers import router as router_user
+from routers.form_routers import router as router_form
+from routers.treatment_routers import router as router_treatment
 
 api = FastAPI()
 
 api.include_router(router_patient)
 api.include_router(router_person)
 api.include_router(router_representative)
+api.include_router(router_user)
+api.include_router(router_form)
+api.include_router(router_treatment)
 
 origins = [
     "http://localhost:8080", "https://auriga-web.netlify.app"

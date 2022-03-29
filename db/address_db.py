@@ -1,5 +1,8 @@
 from sqlalchemy import Column, String, Integer, ForeignKey
-from db.db_connection import Base, engine
+from sqlalchemy.orm import Session
+from fastapi import Depends, HTTPException
+
+from db.db_connection import Base, engine, get_db
 
 
 class AddressDB(Base):
@@ -25,3 +28,17 @@ class PhoneDB(Base):
     number = Column(String)
 
 Base.metadata.create_all(bind=engine)
+
+
+#def add_address(address: AddressDB, db: Session = Depends(get_db)):
+def add_address(address: AddressDB, db: Session):    
+    db.add(address)
+    db.commit()
+    db.refresh(address)
+
+
+#def add_phone(phone: PhoneDB, db: Session = Depends(get_db)):
+def add_phone(phone: PhoneDB, db: Session):
+    db.add(phone)
+    db.commit()
+    db.refresh(phone)    

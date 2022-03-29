@@ -1,7 +1,11 @@
 from sqlalchemy import Column, String, Integer, Boolean, DateTime, ForeignKey
 from sqlalchemy.dialects.postgresql import ARRAY
-from db.db_connection import Base, engine
+from sqlalchemy.orm import Session
+from fastapi import Depends, HTTPException
 import datetime
+
+from db.db_connection import Base, engine, get_db
+
 
 
 class PatientDB(Base):
@@ -33,6 +37,8 @@ class PatientData(Base):
     patientId = Column(Integer, primary_key=True)
     personId = Column(Integer)
     dni = Column(String)
+    historyId = Column(Integer)
+    code = Column(String)
     firstName = Column(String)
     lastName = Column(String)
     birthday = Column(DateTime)
@@ -59,3 +65,11 @@ class PatientData(Base):
 
 
 Base.metadata.create_all(bind=engine)
+
+
+#def create_patient(patient: PatientDB, db: Session = Depends(get_db)):
+def create_patient(patient: PatientDB, db: Session):
+    db.add(patient)
+    db.commit()
+    db.refresh(patient)
+    return patient.id 

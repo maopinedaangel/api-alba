@@ -1,6 +1,9 @@
 from sqlalchemy import Column, String, Integer, ForeignKey, DateTime
 from sqlalchemy.dialects.postgresql import ARRAY
-from db.db_connection import Base, engine
+from sqlalchemy.orm import Session
+from fastapi import Depends, HTTPException
+
+from db.db_connection import Base, engine, get_db
 
 
 class RepresentativeDB(Base):
@@ -34,3 +37,10 @@ class RepresentativeData(Base):
 
         
 Base.metadata.create_all(bind=engine)
+
+
+#def create_representative(representative: RepresentativeDB, db: Session = Depends(get_db)):
+def create_representative(representative: RepresentativeDB, db: Session):
+    db.add(representative)
+    db.commit()
+    db.refresh(representative) 
