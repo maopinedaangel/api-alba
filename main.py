@@ -1,5 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+
 
 from routers.patient_routers import router as router_patient
 from routers.person_routers import router as router_person
@@ -9,6 +10,7 @@ from routers.form_routers import router as router_form
 from routers.treatment_routers import router as router_treatment
 
 api = FastAPI()
+
 
 api.include_router(router_patient)
 api.include_router(router_person)

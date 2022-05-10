@@ -13,6 +13,8 @@ import db.person_db, db.patient_db, db.address_db, db.representative_db
 from models.person_models import NewPerson
 from models.patient_models import NewPatient
 
+from routers.user_routers import get_current_active_user
+
 
 router = APIRouter()
 
@@ -25,7 +27,8 @@ async def get_patients(db: Session = Depends(get_db)):
 
 
 @router.get("/patients-data")
-async def get_patients_data(db: Session = Depends(get_db)):
+#async def get_patients_data(db: Session = Depends(get_db)):
+async def get_patients_data(db: Session = Depends(get_db), user: Session = Depends(get_current_active_user)):
     patients_data = db.query(PatientData).all()
     return patients_data 
 
