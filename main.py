@@ -8,6 +8,8 @@ from routers.representative_routers import router as router_representative
 from routers.user_routers import router as router_user
 from routers.form_routers import router as router_form
 from routers.treatment_routers import router as router_treatment
+from routers.address_routers import router as router_address
+from routers.disease_routers import router as router_disease
 
 api = FastAPI()
 
@@ -18,6 +20,8 @@ api.include_router(router_representative)
 api.include_router(router_user)
 api.include_router(router_form)
 api.include_router(router_treatment)
+api.include_router(router_address)
+api.include_router(router_disease)
 
 origins = [
     "http://localhost:8080", "https://auriga-web.netlify.app"

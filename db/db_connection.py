@@ -3,8 +3,10 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
 
-#DATABASE_URL = "postgresql://postgres:Admin123@localhost:5432/auriga"
-DATABASE_URL = os.environ['DATABASE_URL']
+from config.config import settings
+
+DATABASE_URL = settings.database_url
+#DATABASE_URL = os.environ['DATABASE_URL']
 engine = create_engine(DATABASE_URL)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

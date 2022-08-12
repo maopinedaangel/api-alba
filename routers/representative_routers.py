@@ -14,3 +14,4 @@ async def get_representative(id: int, db: Session = Depends(get_db)):
     if representative == None:
         raise HTTPException(status_code=404, detail="Person not found")
     return representative
+

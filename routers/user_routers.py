@@ -14,34 +14,12 @@ from models.user_models import UserIn, UserOut, Token, TokenData
 #from models.user_models import UserInDB
 from db.person_db import PersonDB
 import db.user_db
+from config.config import settings
 
-#Secret key generada en GitBash con el comando openssl rand -hex 32
-#SECRET_KEY = "e166158be56143b3883cba8c3c28fa623f30ada0e37fe38a500b87601b78f618"
-#Secret key del ejemplo:
-SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
+
+SECRET_KEY = settings.secret_key
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
-
-#Hash generados con contraseñas mao123 y alice123
-'''
-fake_users_db = {
-    "johndoe": {
-        "username": "johndoe",
-        "full_name": "John Doe",
-        "email": "johndoe@example.com",
-        "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
-        "disabled": False,
-    },
-    "alice": {
-        "username": "alice",
-        "full_name": "Alice Wonderson",
-        "email": "alice@example.com",
-        "hashed_password": "$2b$12$DaUculsdR7NOpjhImXFMv.OaWgfEbHPA34Q4WeljehXSE91GclmdS",
-        "disabled": True,
-    },
-}
-'''
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -51,26 +29,13 @@ router = APIRouter()
 
 
 def verify_password(plain_password, hashed_password):
-    #Temporal
     return pwd_context.verify(plain_password, hashed_password)
-    #return plain_password == hashed_password
 
 def get_password_hash(password):
     print(pwd_context.hash(password))
-    #Temporal
-    #return password
     return pwd_context.hash(password)
 
-#Modificar
-'''
-def get_user(db, username: str):
-    if username in db:
-        user_dict = db[username]
-        return UserInDB(**user_dict)
-'''
 
-
-#Función modificada
 def get_user(db: Session, username: str):
     user = db.query(UserDB).filter(UserDB.username == username).one()
     return user
@@ -80,19 +45,7 @@ def get_user_data(db: Session, username: str):
     user = db.query(UserData).filter(UserData.username == username).one()
     return user
 
-#Modificar
-'''
-def authenticate_user(fake_db, username: str, password: str):
-    user = get_user(fake_db, username)
-    if not user:
-        return False
-    if not verify_password(password, user.hashed_password):
-        return False
-    return user
-'''
 
-
-#Función modificada
 def authenticate_user(db: Session, username: str, password: str):
     user = get_user(db, username)
     if not user:
@@ -228,20 +181,6 @@ async def new_user(user: UserIn, database: Session = Depends(get_db)):
     new_user = UserDB(**user_in)    
     db.user_db.create_user(new_user, database)
     return "User created successfully"
-
-
-
-'''
-@router.get("/ensayo")
-async def get_hash(contra: str):
-    print(get_password_hash(contra))
-    return get_password_hash(contra)
-
-@router.get("/ensayo-jwt")
-async def get_jwt(data: dict):
-    print(create_access_token(data))
-    return create_access_token(data)
-'''
 
 
 @router.put("/password")

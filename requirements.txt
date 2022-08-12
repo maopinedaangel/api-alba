@@ -6,3 +6,7 @@ psycopg2==2.8.6
 passlib==1.7.4
 python-jose==3.3.0
 python-multipart==0.0.5
+Pillow==9.0.1
+boto3==1.21.45
+yagmail==0.15.280
+python-dotenv==0.20.0

@@ -1,3 +1,4 @@
+from ctypes import addressof
 from fastapi import APIRouter, Depends, HTTPException
 from db.db_connection import get_db
 from sqlalchemy.orm import Session
@@ -47,6 +48,64 @@ async def get_patient(id: int, db: Session = Depends(get_db)):
     if patient == None:
         raise HTTPException(status_code=404, detail="Patient not found")
     return patient
+
+
+@router.get("/patient-form/{id}")
+async def get_patient_form(id: int, db: Session = Depends(get_db)):
+
+    patient_form = None
+    
+    #Buscar un paciente por su id
+    patient = db.query(PatientDB).get(id)
+    if patient == None:
+        raise HTTPException(status_code=404, detail="Patient not found")
+    #return patient
+     
+    #Buscar la persona correspondiente al id
+    person_id = patient.personId
+    person = db.query(PersonDB).get(person_id)
+    if person == None:
+        raise HTTPException(status_code=404, detail="Person not found")
+    #return person
+
+    patient_form = {**patient.__dict__, **person.__dict__}
+    #return patient_form
+
+    #Buscar la dirección y teléfonos de la persona
+    #address = db.query(AddressDB).get(person_id)
+    address = db.query(AddressDB).filter(person_id == AddressDB.personId).one()    
+    phones = db.query(PhoneDB).filter(person_id == PhoneDB.personId)
+    phone1 = phones[0]
+    phone2 = phones[1]
+
+    patient_form["address"] = address
+    patient_form["phone1"] = phone1
+    patient_form["phone2"] = phone2
+    #return patient_form
+
+    #Buscar el representante
+    representative_data = None
+    #representative = db.query(RepresentativeDB).get(patient.id)
+    representative = db.query(RepresentativeDB).filter(patient.id == RepresentativeDB.patientId).one()    
+
+    #Buscar la dirección y teléfono del representante
+    person_id = representative.personId
+    representative_person = db.query(PersonDB).get(person_id)
+
+    #representative_address = db.query(AddressDb).get(personId)
+    representative_address = db.query(AddressDB).filter(person_id == AddressDB.personId).one()
+    representative_phone = db.query(PhoneDB).filter(person_id == PhoneDB.personId).one()
+
+    representative_data = {**representative.__dict__, **representative_person.__dict__}
+    representative_data["address"] = representative_address
+    representative_data["phone1"] = representative_phone
+
+    #return representative_data
+    patient_form["representative"] = representative_data
+
+    return patient_form
+
+
 
 
 @router.post("/patient")
