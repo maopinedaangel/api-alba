@@ -34,7 +34,22 @@ class FormList(Base):
     creationDate = Column(DateTime)
     formType = Column(String)
 
+
+class FormData(Base):
+    __tablename__ = "form_data"
+
+    id = Column(Integer, primary_key=True)
+    formTypeId = Column(Integer)
+    formType = Column(String)
+    treatmentId = Column(Integer)
+    patientId = Column(Integer)
+    patient = Column(String)
+    creationDate = Column(DateTime)
+
+
 Base.metadata.create_all(bind=engine)
+
+
 
 
 def get_all_form_types(db: Session):
@@ -57,6 +72,15 @@ def find_forms_by_treatment_id(id: int, db: Session):
     forms = db.query(FormList).filter(id == FormList.treatmentId).all()
     return forms
 
+'''
+def get_all_forms_data(db: Session):
+    forms = db.query(FormList).all()
+    return forms
+'''
+
+def get_all_forms_data(db: Session):
+    forms = db.query(FormData).all()
+    return forms
 
 def find_form_by_id(id: int, db: Session):
     return db.query(FormDB).get(id)

@@ -31,6 +31,11 @@ async def get_forms(database: Session = Depends(get_db)):
     return db.form_db.get_all_forms(database)
 
 
+@router.get("/forms-data")
+async def get_forms_data(database: Session = Depends(get_db)):
+    return db.form_db.get_all_forms_data(database)
+
+
 @router.get("/forms")
 async def get_forms_by_treatment_id(id: int, database: Session = Depends(get_db)):
     return db.form_db.find_forms_by_treatment_id(id, database)

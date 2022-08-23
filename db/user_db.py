@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime
 from sqlalchemy.orm import Session
+from datetime import datetime
 from db.db_connection import Base, engine
 
 
@@ -28,6 +29,17 @@ class UserData(Base):
     username = Column(String)
     disabled = Column(Boolean)
 
+
+class CodeDB(Base):
+    __tablename__ = "code"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('auriga_user.id'))
+    code = Column(String)
+    creation_time = Column(DateTime, default=datetime.utcnow)
+    is_used = Column(Boolean, default=False)
+
+
 Base.metadata.create_all(bind=engine)
 
 
@@ -39,7 +51,7 @@ def create_user(user: UserDB, db: Session):
 
 
 def get_all_users(db: Session):
-    users = db.query(UserDB).all()
+    users = db.query(UserData).all()
     return users
 
 
